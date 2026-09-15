@@ -20,22 +20,6 @@ for param in m.classifier[6].parameters():
 
 #################################
 
-def crop_faces(image_path, output_prefix="face"):
-
-    detector = MTCNN()
-    image = cv2.imread(image_path)
-
-    if image is not None:
-
-        image_rgb = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
-        detections = detector.detect_faces(image_rgb)
-
-        x, y, width, height = detections[0]['box']
-        x, y = max(0, x), max(0, y)
-        cropped_face = image[y:y+height, x:x+width]
-        return cropped_face
-
-
 imgfile = st.file_uploader("Choose an image", type=["jpg", "jpeg", "png"])
 if imgfile is not None:
     file_bytes = imgfile.read()
@@ -59,7 +43,7 @@ if imgfile is not None:
         Yp = m(tor_image)
         sx = torch.softmax(Yp, dim=1)
         predicted_img = torch.argmax(sx, dim=1)
-        
+
         if predicted_img.item() == 0:
             st.title("Predicted class: Tom")
         else:
